@@ -16,26 +16,26 @@
       }
 
       :root {
-        --bg-primary: #0a0a0f;
-        --bg-secondary: #12121a;
-        --bg-tertiary: #1a1a26;
-        --bg-elevated: #222233;
-        --border: #2a2a3d;
-        --border-light: #3a3a52;
-        --text-primary: #e8e8f0;
-        --text-secondary: #9898b0;
-        --text-muted: #606078;
-        --accent: #7b68ee;
-        --accent-light: #9d8fff;
-        --accent-dim: #5a4abf;
-        --accent-glow: rgba(123, 104, 238, 0.3);
-        --red: #ff4466;
-        --red-glow: rgba(255, 68, 102, 0.3);
-        --green: #44ffaa;
-        --green-dim: #2a9968;
-        --amber: #ffaa44;
-        --cyan: #44ddff;
-        --surface-hover: rgba(123, 104, 238, 0.08);
+        --bg-primary: #141e18;
+        --bg-secondary: #1a2820;
+        --bg-tertiary: #243028;
+        --bg-elevated: #2e3c30;
+        --border: #364432;
+        --border-light: #48583e;
+        --text-primary: #dce8dc;
+        --text-secondary: #94a892;
+        --text-muted: #5e7058;
+        --accent: #4d9878;
+        --accent-light: #62b48e;
+        --accent-dim: #3a7a5c;
+        --accent-glow: rgba(77, 152, 120, 0.3);
+        --red: #e85454;
+        --red-glow: rgba(232, 84, 84, 0.3);
+        --green: #62b48e;
+        --green-dim: #3a7a5c;
+        --amber: #c8a84e;
+        --cyan: #4aafaa;
+        --surface-hover: rgba(77, 152, 120, 0.1);
         --radius: 10px;
         --radius-sm: 6px;
         --radius-lg: 16px;
@@ -227,7 +227,7 @@
       .icon-btn.active {
         border-color: var(--accent);
         color: var(--accent);
-        background: rgba(123, 104, 238, 0.1);
+        background: rgba(77, 152, 120, 0.1);
       }
       .icon-btn svg {
         width: 16px;
@@ -258,7 +258,7 @@
         overflow: hidden;
         background: radial-gradient(
           ellipse at 50% 50%,
-          rgba(123, 104, 238, 0.04) 0%,
+          rgba(77, 152, 120, 0.04) 0%,
           transparent 70%
         );
       }
@@ -305,7 +305,7 @@
         height: 36px;
         box-shadow:
           0 0 30px var(--accent-glow),
-          0 0 60px rgba(123, 104, 238, 0.15);
+          0 0 60px rgba(77, 152, 120, 0.15);
         border-color: var(--accent-light);
       }
       .mouse-cursor::after {
@@ -756,6 +756,130 @@
         color: var(--text-muted);
         font-size: 13px;
         line-height: 1.6;
+      }
+
+      /* MIDI Section */
+      .midi-section {
+        border-bottom: 1px solid var(--border);
+        padding: 12px;
+      }
+      .midi-section-title {
+        font-size: 11px;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        color: var(--text-muted);
+        margin-bottom: 10px;
+      }
+      .midi-import-btn {
+        width: 100%;
+        padding: 8px 12px;
+        border: 1px dashed var(--border-light);
+        background: transparent;
+        color: var(--text-secondary);
+        border-radius: var(--radius-sm);
+        cursor: pointer;
+        font-size: 12px;
+        font-family: inherit;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        transition: all var(--transition);
+      }
+      .midi-import-btn:hover {
+        border-color: var(--accent);
+        color: var(--accent-light);
+        background: var(--surface-hover);
+      }
+      .midi-file-info {
+        margin-top: 10px;
+        padding: 10px;
+        background: var(--bg-tertiary);
+        border-radius: var(--radius-sm);
+        border: 1px solid var(--border);
+      }
+      .midi-file-name {
+        font-size: 12px;
+        font-weight: 500;
+        color: var(--text-primary);
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        margin-bottom: 4px;
+      }
+      .midi-file-meta {
+        font-size: 10px;
+        color: var(--text-muted);
+      }
+      .midi-transport {
+        display: flex;
+        gap: 6px;
+        margin-top: 8px;
+      }
+      .midi-transport-btn {
+        flex: 1;
+        padding: 6px 10px;
+        border: 1px solid var(--border);
+        background: transparent;
+        color: var(--text-secondary);
+        border-radius: var(--radius-sm);
+        cursor: pointer;
+        font-size: 11px;
+        font-family: inherit;
+        font-weight: 500;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+        transition: all var(--transition);
+      }
+      .midi-transport-btn:hover {
+        border-color: var(--accent);
+        color: var(--accent-light);
+      }
+      .midi-transport-btn.playing {
+        border-color: var(--green-dim);
+        color: var(--green);
+        background: rgba(68, 255, 170, 0.08);
+      }
+      .midi-transport-btn:disabled {
+        opacity: 0.4;
+        cursor: not-allowed;
+      }
+      .midi-transport-btn svg {
+        width: 12px;
+        height: 12px;
+      }
+      .midi-progress {
+        width: 100%;
+        height: 4px;
+        background: var(--bg-primary);
+        border-radius: 2px;
+        margin-top: 8px;
+        overflow: hidden;
+      }
+      .midi-progress-bar {
+        height: 100%;
+        background: var(--accent);
+        border-radius: 2px;
+        width: 0%;
+        transition: width 0.1s linear;
+      }
+      .midi-remove-btn {
+        width: 100%;
+        padding: 4px;
+        border: none;
+        background: transparent;
+        color: var(--text-muted);
+        cursor: pointer;
+        font-size: 10px;
+        font-family: inherit;
+        margin-top: 6px;
+        transition: color var(--transition);
+      }
+      .midi-remove-btn:hover {
+        color: var(--red);
       }
 
       /* Waveform Visualizer */
@@ -1349,7 +1473,7 @@
         <!-- Tracks Panel -->
         <div class="tracks-panel" id="tracksPanel">
           <div class="panel-header">
-            <span class="panel-title">Recorded Tracks</span>
+            <span class="panel-title">Tracks</span>
             <button class="panel-close" onclick="togglePanel('tracks')">
               <svg
                 width="14"
@@ -1364,6 +1488,39 @@
               </svg>
             </button>
           </div>
+
+          <!-- MIDI Import Section -->
+          <div class="midi-section">
+            <div class="midi-section-title">MIDI Import</div>
+            <input type="file" id="midiFileInput" accept=".mid,.midi" style="display:none" />
+            <div id="midiEmpty">
+              <button class="midi-import-btn" onclick="el('midiFileInput').click()">
+                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                Import MIDI File
+              </button>
+            </div>
+            <div id="midiLoaded" style="display:none">
+              <div class="midi-file-info">
+                <div class="midi-file-name" id="midiFileName">—</div>
+                <div class="midi-file-meta" id="midiFileMeta">—</div>
+                <div class="midi-transport">
+                  <button class="midi-transport-btn" id="btnMidiPlay" onclick="toggleMidiPlayback()">
+                    <svg viewBox="0 0 24 24" fill="currentColor"><polygon points="8,5 19,12 8,19"/></svg>
+                    Play
+                  </button>
+                  <button class="midi-transport-btn" id="btnMidiStop" onclick="stopMidiPlayback()" disabled>
+                    <svg viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="6" width="12" height="12" rx="1"/></svg>
+                    Stop
+                  </button>
+                </div>
+                <div class="midi-progress">
+                  <div class="midi-progress-bar" id="midiProgressBar"></div>
+                </div>
+              </div>
+              <button class="midi-remove-btn" onclick="removeMidiFile()">Remove MIDI</button>
+            </div>
+          </div>
+
           <div class="panel-body" id="tracksList">
             <div class="empty-tracks">
               No tracks recorded yet.<br />Press <kbd>R</kbd> to start
@@ -1399,6 +1556,11 @@
           <li><kbd>Space</kbd> — Stop playback / recording</li>
           <li><kbd>Tab</kbd> — Switch mouse / keyboard mode</li>
           <li><kbd>?</kbd> — Toggle this help</li>
+        </ul>
+        <h3>MIDI Playback</h3>
+        <ul>
+          <li>Open the Tracks panel to import a .mid file</li>
+          <li>MIDI notes play through the theremin with current effects</li>
         </ul>
         <button class="help-close" onclick="toggleHelp()">Got it</button>
       </div>
@@ -1934,7 +2096,7 @@
           if (vizMode === 'waveform' || vizMode === 'both') {
             analyser.getByteTimeDomainData(dataArray);
             ctx.lineWidth = 1.5;
-            ctx.strokeStyle = '#7b68ee';
+            ctx.strokeStyle = '#4d9878';
             ctx.beginPath();
             const sliceW = w / bufLen;
             for (let i = 0; i < bufLen; i++) {
@@ -1951,8 +2113,8 @@
             const barW = w / barCount;
             ctx.fillStyle =
               vizMode === 'both'
-                ? 'rgba(123,104,238,0.3)'
-                : 'rgba(123,104,238,0.6)';
+                ? 'rgba(77,152,120,0.3)'
+                : 'rgba(77,152,120,0.6)';
             for (let i = 0; i < barCount; i++) {
               const idx = Math.floor((i * bufLen) / barCount);
               const barH = (freqArray[idx] / 255) * h;
@@ -2321,6 +2483,327 @@
         }
       }
 
+      // ─── MIDI Parser & Playback ─────────────────────────────────────
+      let midiData = null;
+      let midiPlaybackState = null; // { playing, startTime, timeouts, totalDuration }
+
+      function parseMidi(arrayBuffer) {
+        const data = new Uint8Array(arrayBuffer);
+        let pos = 0;
+
+        function readStr(len) {
+          let s = '';
+          for (let i = 0; i < len; i++) s += String.fromCharCode(data[pos++]);
+          return s;
+        }
+        function readUint16() {
+          return (data[pos++] << 8) | data[pos++];
+        }
+        function readUint32() {
+          return (data[pos++] << 24) | (data[pos++] << 16) | (data[pos++] << 8) | data[pos++];
+        }
+        function readVarLen() {
+          let val = 0;
+          let byte;
+          do {
+            byte = data[pos++];
+            val = (val << 7) | (byte & 0x7f);
+          } while (byte & 0x80);
+          return val;
+        }
+
+        // Header chunk
+        const headerTag = readStr(4);
+        if (headerTag !== 'MThd') throw new Error('Not a valid MIDI file');
+        const headerLen = readUint32();
+        const format = readUint16();
+        const numTracks = readUint16();
+        const timeDivision = readUint16();
+
+        const ticksPerBeat = timeDivision & 0x7fff;
+        const tracks = [];
+
+        for (let t = 0; t < numTracks; t++) {
+          const trackTag = readStr(4);
+          if (trackTag !== 'MTrk') throw new Error('Invalid track chunk');
+          const trackLen = readUint32();
+          const trackEnd = pos + trackLen;
+          const events = [];
+          let runningStatus = 0;
+
+          while (pos < trackEnd) {
+            const delta = readVarLen();
+            let statusByte = data[pos];
+
+            // Meta event
+            if (statusByte === 0xff) {
+              pos++;
+              const metaType = data[pos++];
+              const metaLen = readVarLen();
+              const metaData = data.slice(pos, pos + metaLen);
+              pos += metaLen;
+              events.push({ delta, type: 'meta', metaType, data: metaData });
+              continue;
+            }
+
+            // SysEx
+            if (statusByte === 0xf0 || statusByte === 0xf7) {
+              pos++;
+              const sysLen = readVarLen();
+              pos += sysLen;
+              events.push({ delta, type: 'sysex' });
+              continue;
+            }
+
+            // Channel event
+            if (statusByte & 0x80) {
+              runningStatus = statusByte;
+              pos++;
+            }
+
+            const cmd = runningStatus & 0xf0;
+            const ch = runningStatus & 0x0f;
+
+            if (cmd === 0x80) { // Note Off
+              const note = data[pos++];
+              const vel = data[pos++];
+              events.push({ delta, type: 'noteOff', ch, note, vel });
+            } else if (cmd === 0x90) { // Note On
+              const note = data[pos++];
+              const vel = data[pos++];
+              if (vel === 0) {
+                events.push({ delta, type: 'noteOff', ch, note, vel });
+              } else {
+                events.push({ delta, type: 'noteOn', ch, note, vel });
+              }
+            } else if (cmd === 0xa0) { // Aftertouch
+              pos += 2;
+              events.push({ delta, type: 'other' });
+            } else if (cmd === 0xb0) { // Control Change
+              pos += 2;
+              events.push({ delta, type: 'other' });
+            } else if (cmd === 0xc0) { // Program Change
+              pos += 1;
+              events.push({ delta, type: 'other' });
+            } else if (cmd === 0xd0) { // Channel Pressure
+              pos += 1;
+              events.push({ delta, type: 'other' });
+            } else if (cmd === 0xe0) { // Pitch Bend
+              pos += 2;
+              events.push({ delta, type: 'other' });
+            } else {
+              // Unknown, skip
+              pos++;
+              events.push({ delta, type: 'other' });
+            }
+          }
+          pos = trackEnd;
+          tracks.push(events);
+        }
+
+        return { format, numTracks, ticksPerBeat, tracks };
+      }
+
+      function midiNoteToFreq(note) {
+        return 440 * Math.pow(2, (note - 69) / 12);
+      }
+
+      function midiToNoteEvents(midi) {
+        // Merge all tracks into a single timed event list
+        // Resolve tempo changes; default 120 BPM = 500000 us/beat
+        let tempo = 500000;
+        const ticksPerBeat = midi.ticksPerBeat;
+        const allEvents = [];
+
+        for (const track of midi.tracks) {
+          let tickTime = 0;
+          for (const ev of track) {
+            tickTime += ev.delta;
+            allEvents.push({ ...ev, tickTime });
+          }
+        }
+
+        // Sort by tick time, meta events first (for tempo)
+        allEvents.sort((a, b) => a.tickTime - b.tickTime || (a.type === 'meta' ? -1 : 1));
+
+        // Convert ticks to seconds
+        const timedEvents = [];
+        let currentTick = 0;
+        let currentTime = 0;
+        let currentTempo = 500000;
+
+        for (const ev of allEvents) {
+          const deltaTicks = ev.tickTime - currentTick;
+          currentTime += (deltaTicks / ticksPerBeat) * (currentTempo / 1000000);
+          currentTick = ev.tickTime;
+
+          if (ev.type === 'meta' && ev.metaType === 0x51 && ev.data.length >= 3) {
+            currentTempo = (ev.data[0] << 16) | (ev.data[1] << 8) | ev.data[2];
+          }
+
+          if (ev.type === 'noteOn' || ev.type === 'noteOff') {
+            timedEvents.push({
+              time: currentTime,
+              type: ev.type,
+              note: ev.note,
+              vel: ev.vel,
+              ch: ev.ch,
+            });
+          }
+        }
+
+        return timedEvents;
+      }
+
+      function loadMidiFile(file) {
+        const reader = new FileReader();
+        reader.onload = function (e) {
+          try {
+            const midi = parseMidi(e.target.result);
+            const events = midiToNoteEvents(midi);
+            const noteOnEvents = events.filter(ev => ev.type === 'noteOn');
+            if (noteOnEvents.length === 0) {
+              alert('No playable notes found in this MIDI file.');
+              return;
+            }
+            const lastEvent = events[events.length - 1];
+            const totalDuration = lastEvent ? lastEvent.time : 0;
+            const noteCount = noteOnEvents.length;
+
+            midiData = { fileName: file.name, events, totalDuration, noteCount, trackCount: midi.numTracks };
+
+            el('midiFileName').textContent = file.name;
+            el('midiFileMeta').textContent =
+              `${noteCount} notes \u00B7 ${formatTime(totalDuration)} \u00B7 ${midi.numTracks} track${midi.numTracks > 1 ? 's' : ''}`;
+            el('midiEmpty').style.display = 'none';
+            el('midiLoaded').style.display = 'block';
+            el('midiProgressBar').style.width = '0%';
+            el('btnMidiPlay').disabled = false;
+            el('btnMidiStop').disabled = true;
+          } catch (err) {
+            alert('Failed to parse MIDI file: ' + err.message);
+          }
+        };
+        reader.readAsArrayBuffer(file);
+      }
+
+      function toggleMidiPlayback() {
+        if (midiPlaybackState && midiPlaybackState.playing) {
+          stopMidiPlayback();
+        } else {
+          startMidiPlayback();
+        }
+      }
+
+      function startMidiPlayback() {
+        if (!midiData) return;
+        initAudio();
+
+        const events = midiData.events;
+        const totalDuration = midiData.totalDuration;
+        const startTime = performance.now();
+        const timeouts = [];
+        const activeNotes = new Map(); // note -> count of active voices
+
+        midiPlaybackState = { playing: true, startTime, timeouts, totalDuration, animFrame: null };
+
+        // Update UI
+        el('btnMidiPlay').innerHTML =
+          '<svg viewBox="0 0 24 24" fill="currentColor"><rect x="5" y="5" width="5" height="14" rx="1"/><rect x="14" y="5" width="5" height="14" rx="1"/></svg> Pause';
+        el('btnMidiPlay').classList.add('playing');
+        el('btnMidiStop').disabled = false;
+
+        for (const ev of events) {
+          const delay = ev.time * 1000; // ms
+          const tid = setTimeout(() => {
+            if (!midiPlaybackState || !midiPlaybackState.playing) return;
+
+            if (ev.type === 'noteOn') {
+              const freq = midiNoteToFreq(ev.note);
+              const vol = ev.vel / 127;
+              const count = activeNotes.get(ev.note) || 0;
+              activeNotes.set(ev.note, count + 1);
+              noteOn(freq, vol);
+            } else if (ev.type === 'noteOff') {
+              const count = activeNotes.get(ev.note) || 1;
+              if (count <= 1) {
+                activeNotes.delete(ev.note);
+                // Only turn off if no other notes active
+                if (activeNotes.size === 0) {
+                  noteOff();
+                } else {
+                  // Glide to most recent active note
+                  const lastNote = [...activeNotes.keys()].pop();
+                  if (lastNote !== undefined) {
+                    setFreqSmooth(midiNoteToFreq(lastNote));
+                  }
+                }
+              } else {
+                activeNotes.set(ev.note, count - 1);
+              }
+            }
+          }, delay);
+          timeouts.push(tid);
+        }
+
+        // End-of-playback timeout
+        const endTid = setTimeout(() => {
+          noteOff();
+          finishMidiPlayback();
+        }, (totalDuration + 0.5) * 1000);
+        timeouts.push(endTid);
+
+        // Progress bar animation
+        function updateProgress() {
+          if (!midiPlaybackState || !midiPlaybackState.playing) return;
+          const elapsed = (performance.now() - startTime) / 1000;
+          const pct = Math.min(100, (elapsed / totalDuration) * 100);
+          el('midiProgressBar').style.width = pct + '%';
+          midiPlaybackState.animFrame = requestAnimationFrame(updateProgress);
+        }
+        updateProgress();
+      }
+
+      function stopMidiPlayback() {
+        if (!midiPlaybackState) return;
+        midiPlaybackState.playing = false;
+        for (const tid of midiPlaybackState.timeouts) clearTimeout(tid);
+        if (midiPlaybackState.animFrame) cancelAnimationFrame(midiPlaybackState.animFrame);
+        midiPlaybackState = null;
+
+        noteOff();
+        el('midiProgressBar').style.width = '0%';
+        el('btnMidiPlay').innerHTML =
+          '<svg viewBox="0 0 24 24" fill="currentColor"><polygon points="8,5 19,12 8,19"/></svg> Play';
+        el('btnMidiPlay').classList.remove('playing');
+        el('btnMidiStop').disabled = true;
+      }
+
+      function finishMidiPlayback() {
+        if (!midiPlaybackState) return;
+        if (midiPlaybackState.animFrame) cancelAnimationFrame(midiPlaybackState.animFrame);
+        midiPlaybackState = null;
+
+        el('midiProgressBar').style.width = '100%';
+        el('btnMidiPlay').innerHTML =
+          '<svg viewBox="0 0 24 24" fill="currentColor"><polygon points="8,5 19,12 8,19"/></svg> Play';
+        el('btnMidiPlay').classList.remove('playing');
+        el('btnMidiStop').disabled = true;
+
+        // Reset progress after a moment
+        setTimeout(() => {
+          if (!midiPlaybackState) el('midiProgressBar').style.width = '0%';
+        }, 1500);
+      }
+
+      function removeMidiFile() {
+        stopMidiPlayback();
+        midiData = null;
+        el('midiEmpty').style.display = 'block';
+        el('midiLoaded').style.display = 'none';
+        el('midiFileInput').value = '';
+      }
+
       // ─── UI Helpers ─────────────────────────────────────────────────
       function el(id) {
         return document.getElementById(id);
@@ -2370,6 +2853,8 @@
       function stopAll() {
         noteOff();
         if (isRecording) stopRecording();
+        // Stop MIDI playback
+        stopMidiPlayback();
         // Stop all playing tracks
         Object.keys(playingTrackSources).forEach((id) => {
           playingTrackSources[id].stop();
@@ -2400,6 +2885,12 @@
         );
         el('btnTracks').addEventListener('click', () => togglePanel('tracks'));
         el('btnHelp').addEventListener('click', toggleHelp);
+
+        // MIDI file input
+        el('midiFileInput').addEventListener('change', (e) => {
+          const file = e.target.files[0];
+          if (file) loadMidiFile(file);
+        });
 
         // Click outside help to close
         el('helpOverlay').addEventListener('click', (e) => {
