@@ -386,6 +386,184 @@
         display: none;
       }
 
+      /* Gesture (Webcam) Mode */
+      .cam-surface {
+        flex: 1;
+        display: none;
+        position: relative;
+        overflow: hidden;
+        background: #0a0f0c;
+      }
+      .cam-surface.active {
+        display: flex;
+      }
+      .cam-video {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transform: scaleX(-1);
+        opacity: 0.85;
+      }
+      .cam-overlay {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+      }
+      .cam-enable {
+        position: relative;
+        z-index: 5;
+        margin: auto;
+        text-align: center;
+        max-width: 420px;
+        padding: 32px;
+        background: rgba(20, 30, 24, 0.85);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-lg);
+      }
+      .cam-enable h3 {
+        font-size: 16px;
+        font-weight: 600;
+        color: var(--accent-light);
+        margin-bottom: 10px;
+      }
+      .cam-enable p {
+        font-size: 13px;
+        color: var(--text-secondary);
+        line-height: 1.6;
+        margin-bottom: 18px;
+      }
+      .cam-enable p strong {
+        color: var(--text-primary);
+      }
+      .cam-start-btn {
+        padding: 10px 24px;
+        border: none;
+        background: var(--accent);
+        color: #fff;
+        font-size: 13px;
+        font-weight: 600;
+        font-family: inherit;
+        border-radius: var(--radius-sm);
+        cursor: pointer;
+        transition: background var(--transition);
+      }
+      .cam-start-btn:hover:not(:disabled) {
+        background: var(--accent-light);
+      }
+      .cam-start-btn:disabled {
+        opacity: 0.6;
+        cursor: default;
+      }
+      .cam-error {
+        margin-top: 12px;
+        font-size: 12px;
+        color: var(--red);
+        line-height: 1.5;
+      }
+      .cam-status {
+        position: absolute;
+        bottom: 16px;
+        left: 50%;
+        transform: translateX(-50%);
+        font-size: 11px;
+        font-weight: 500;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+        color: var(--text-secondary);
+        background: rgba(10, 15, 12, 0.7);
+        padding: 4px 12px;
+        border-radius: var(--radius-sm);
+        border: 1px solid var(--border);
+        pointer-events: none;
+        white-space: nowrap;
+      }
+      .cam-status:empty {
+        display: none;
+      }
+      .vol-meter {
+        position: absolute;
+        left: 20px;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 8px;
+        height: 45%;
+        background: rgba(255, 255, 255, 0.08);
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        overflow: hidden;
+        pointer-events: none;
+      }
+      .vol-meter-fill {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        height: 0%;
+        background: var(--amber);
+        border-radius: 4px;
+        transition: height 0.05s linear;
+      }
+      .cam-calib-btn {
+        position: absolute;
+        top: 16px;
+        right: 16px;
+        z-index: 6;
+        display: none;
+        padding: 6px 14px;
+        font-family: inherit;
+        font-size: 11px;
+        font-weight: 600;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+        background: rgba(20, 30, 24, 0.8);
+        color: var(--text-secondary);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-sm);
+        cursor: pointer;
+        transition: all var(--transition);
+      }
+      .cam-calib-btn:hover {
+        color: var(--text-primary);
+        border-color: var(--border-light);
+      }
+      .cam-calib-btn.active {
+        color: var(--amber);
+        border-color: var(--amber);
+      }
+      .cam-calib-prompt {
+        position: absolute;
+        top: 40%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        z-index: 6;
+        font-size: 17px;
+        font-weight: 600;
+        color: var(--text-primary);
+        background: rgba(10, 15, 12, 0.85);
+        padding: 14px 24px;
+        border-radius: var(--radius);
+        border: 1px solid var(--border-light);
+        pointer-events: none;
+        white-space: nowrap;
+      }
+      .cam-calib-prompt:empty {
+        display: none;
+      }
+      .vol-meter-label {
+        position: absolute;
+        left: 12px;
+        top: calc(50% + 24%);
+        font-size: 10px;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+        color: var(--text-muted);
+        pointer-events: none;
+      }
+
       .keyboard-info {
         padding: 12px 20px;
         display: flex;
@@ -1153,6 +1331,24 @@
               </svg>
               Keyboard
             </button>
+            <button
+              class="mode-btn"
+              id="btnCamMode"
+              data-tooltip="Gesture (Webcam)"
+            >
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+              >
+                <path
+                  d="M18 10V7a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-3"
+                />
+                <polygon points="22 8 18 12 22 16 22 8" />
+              </svg>
+              Gesture
+            </button>
           </div>
         </div>
 
@@ -1225,6 +1421,46 @@
             <div class="vol-strip">
               <label>Volume</label>
               <input type="range" id="kbVolume" min="0" max="100" value="70" />
+            </div>
+          </div>
+
+          <!-- Gesture (Webcam) Mode Surface -->
+          <div class="cam-surface" id="camSurface">
+            <video
+              class="cam-video"
+              id="camVideo"
+              autoplay
+              playsinline
+              muted
+            ></video>
+            <canvas class="cam-overlay" id="camOverlay"></canvas>
+            <div class="freq-display" id="camFreqDisplay">440.0 Hz — A4</div>
+            <div class="vol-meter">
+              <div class="vol-meter-fill" id="camVolFill"></div>
+            </div>
+            <div class="vol-meter-label">Vol</div>
+            <div class="cam-status" id="camStatus"></div>
+            <button class="cam-calib-btn" id="btnCamCalibrate">Calibrate</button>
+            <div class="cam-calib-prompt" id="camCalibPrompt"></div>
+            <div class="cam-enable" id="camEnable">
+              <h3>Gesture Mode</h3>
+              <p>
+                Play the theremin with your hands, like the real thing:<br />
+                <strong>Right hand up / down</strong> — pitch<br />
+                <strong>Left hand height</strong> — volume (raise = loud, rest = silent)<br />
+                Wobble your right hand for <strong>vibrato</strong> · pinch
+                thumb–index for <strong>fine tuning</strong> · close a left
+                <strong>fist</strong> to mute
+              </p>
+              <p>
+                Tip: once the camera is running, use
+                <strong>Calibrate</strong> (top-right) to match the pitch and
+                volume fields to your reach.
+              </p>
+              <button class="cam-start-btn" id="btnCamStart">
+                Enable Camera
+              </button>
+              <div class="cam-error" id="camError"></div>
             </div>
           </div>
 
@@ -1492,24 +1728,56 @@
           <!-- MIDI Import Section -->
           <div class="midi-section">
             <div class="midi-section-title">MIDI Import</div>
-            <input type="file" id="midiFileInput" accept=".mid,.midi" style="display:none" />
+            <input
+              type="file"
+              id="midiFileInput"
+              accept=".mid,.midi"
+              style="display: none"
+            />
             <div id="midiEmpty">
-              <button class="midi-import-btn" onclick="el('midiFileInput').click()">
-                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+              <button
+                class="midi-import-btn"
+                onclick="el('midiFileInput').click()"
+              >
+                <svg
+                  viewBox="0 0 24 24"
+                  width="14"
+                  height="14"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                >
+                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                  <polyline points="17 8 12 3 7 8" />
+                  <line x1="12" y1="3" x2="12" y2="15" />
+                </svg>
                 Import MIDI File
               </button>
             </div>
-            <div id="midiLoaded" style="display:none">
+            <div id="midiLoaded" style="display: none">
               <div class="midi-file-info">
                 <div class="midi-file-name" id="midiFileName">—</div>
                 <div class="midi-file-meta" id="midiFileMeta">—</div>
                 <div class="midi-transport">
-                  <button class="midi-transport-btn" id="btnMidiPlay" onclick="toggleMidiPlayback()">
-                    <svg viewBox="0 0 24 24" fill="currentColor"><polygon points="8,5 19,12 8,19"/></svg>
+                  <button
+                    class="midi-transport-btn"
+                    id="btnMidiPlay"
+                    onclick="toggleMidiPlayback()"
+                  >
+                    <svg viewBox="0 0 24 24" fill="currentColor">
+                      <polygon points="8,5 19,12 8,19" />
+                    </svg>
                     Play
                   </button>
-                  <button class="midi-transport-btn" id="btnMidiStop" onclick="stopMidiPlayback()" disabled>
-                    <svg viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="6" width="12" height="12" rx="1"/></svg>
+                  <button
+                    class="midi-transport-btn"
+                    id="btnMidiStop"
+                    onclick="stopMidiPlayback()"
+                    disabled
+                  >
+                    <svg viewBox="0 0 24 24" fill="currentColor">
+                      <rect x="6" y="6" width="12" height="12" rx="1" />
+                    </svg>
                     Stop
                   </button>
                 </div>
@@ -1517,7 +1785,9 @@
                   <div class="midi-progress-bar" id="midiProgressBar"></div>
                 </div>
               </div>
-              <button class="midi-remove-btn" onclick="removeMidiFile()">Remove MIDI</button>
+              <button class="midi-remove-btn" onclick="removeMidiFile()">
+                Remove MIDI
+              </button>
             </div>
           </div>
 
@@ -1550,11 +1820,28 @@
           </li>
           <li><kbd>Z</kbd> / <kbd>X</kbd> to shift octave down / up</li>
         </ul>
+        <h3>Gesture Mode (Webcam)</h3>
+        <ul>
+          <li>
+            <strong>Right hand up / down</strong> — pitch (higher = higher note)
+          </li>
+          <li>Wobble the right hand for natural vibrato</li>
+          <li>Pinch thumb–index (right hand) for ±1 semitone fine tuning</li>
+          <li>
+            <strong>Left hand height</strong> — volume (raise = loud, rest low
+            = silent)
+          </li>
+          <li>Close a left fist to mute; hide the right hand to stop playing</li>
+          <li>
+            <strong>Calibrate</strong> button (top-right) matches the pitch and
+            volume fields to your reach
+          </li>
+        </ul>
         <h3>Controls</h3>
         <ul>
           <li><kbd>R</kbd> — Toggle recording</li>
           <li><kbd>Space</kbd> — Stop playback / recording</li>
-          <li><kbd>Tab</kbd> — Switch mouse / keyboard mode</li>
+          <li><kbd>Tab</kbd> — Cycle mouse / keyboard / gesture mode</li>
           <li><kbd>?</kbd> — Toggle this help</li>
         </ul>
         <h3>MIDI Playback</h3>
@@ -1582,7 +1869,7 @@
         recordedChunks = [];
       let recStartTime = 0;
       let tracks = [];
-      let currentMode = 'mouse'; // 'mouse' | 'keyboard'
+      let currentMode = 'mouse'; // 'mouse' | 'keyboard' | 'camera'
       let currentOctave = 4;
       let playingTrackSources = {};
 
@@ -2298,7 +2585,8 @@
         }
         if (key === 'tab') {
           e.preventDefault();
-          switchMode(currentMode === 'mouse' ? 'keyboard' : 'mouse');
+          const modes = ['mouse', 'keyboard', 'camera'];
+          switchMode(modes[(modes.indexOf(currentMode) + 1) % modes.length]);
           return;
         }
         if (key === '?') {
@@ -2355,6 +2643,552 @@
         }
       });
 
+      // ─── Gesture (Webcam) Mode ────────────────────────────────────
+      // Hand tracking via MediaPipe HandLandmarker, lazy-loaded from CDN
+      // the first time gesture mode is enabled.
+      const VISION_CDN =
+        'https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.14';
+      const HAND_MODEL_URL =
+        'https://storage.googleapis.com/mediapipe-models/hand_landmarker/hand_landmarker/float16/1/hand_landmarker.task';
+
+      const HAND_CONNECTIONS = [
+        [0, 1],
+        [1, 2],
+        [2, 3],
+        [3, 4],
+        [0, 5],
+        [5, 6],
+        [6, 7],
+        [7, 8],
+        [5, 9],
+        [9, 10],
+        [10, 11],
+        [11, 12],
+        [9, 13],
+        [13, 14],
+        [14, 15],
+        [15, 16],
+        [13, 17],
+        [17, 18],
+        [18, 19],
+        [19, 20],
+        [0, 17],
+      ];
+
+      let camStream = null;
+      let handLandmarker = null;
+      let camDetecting = false;
+      let camRAF = null;
+      let camLastVideoTime = -1;
+      let gesturePlaying = false;
+
+      // How long (ms) the last pitch/volume is held when tracking briefly
+      // drops, before the note fades out — like a real theremin, the sound
+      // should never glitch to silence over a single lost frame.
+      const GRACE_MS = 220;
+      let lastRightHandSeen = 0;
+
+      // One Euro filter: adaptive smoothing — heavy smoothing when the hand
+      // is nearly still (kills sensor jitter), almost none during fast
+      // motion (kills latency). Lets deliberate hand vibrato pass through.
+      class OneEuroFilter {
+        constructor(minCutoff, beta, dCutoff = 1.0) {
+          this.minCutoff = minCutoff; // Hz — cutoff at rest
+          this.beta = beta; // cutoff increase per unit of speed
+          this.dCutoff = dCutoff; // Hz — cutoff for the derivative
+          this.xPrev = null;
+          this.dxPrev = 0;
+          this.tPrev = null;
+        }
+        alpha(cutoff, dt) {
+          const tau = 1 / (2 * Math.PI * cutoff);
+          return 1 / (1 + tau / dt);
+        }
+        filter(x, t) {
+          // t in seconds
+          if (this.tPrev === null) {
+            this.tPrev = t;
+            this.xPrev = x;
+            this.dxPrev = 0;
+            return x;
+          }
+          let dt = t - this.tPrev;
+          if (dt <= 0) dt = 1 / 60;
+          this.tPrev = t;
+          const aD = this.alpha(this.dCutoff, dt);
+          const dx = (x - this.xPrev) / dt;
+          this.dxPrev = aD * dx + (1 - aD) * this.dxPrev;
+          const cutoff = this.minCutoff + this.beta * Math.abs(this.dxPrev);
+          const a = this.alpha(cutoff, dt);
+          this.xPrev = a * x + (1 - a) * this.xPrev;
+          return this.xPrev;
+        }
+        reset() {
+          this.xPrev = null;
+          this.tPrev = null;
+          this.dxPrev = 0;
+        }
+      }
+
+      const PITCH_MIN_CUTOFF = 1.5; // Hz — pitch filter cutoff at rest
+      const pitchFilter = new OneEuroFilter(PITCH_MIN_CUTOFF, 1.2);
+      const volFilter = new OneEuroFilter(2.0, 1.5);
+      let pitchVal = null; // filtered 0..1 (0 = low pitch, 1 = high pitch)
+      let volVal = null; // filtered 0..1
+      let leftMuted = false; // fist-close mute on the volume hand
+      let lastProcTime = 0;
+
+      // Natural vibrato detection: a slow baseline of the raw pitch ratio
+      // plus an envelope of the fast component. Deliberate hand oscillation
+      // (5–7 Hz) opens the pitch filter's cutoff so the player's own
+      // vibrato passes through unsmoothed; sensor jitter stays below the
+      // gate and remains filtered out.
+      const VIB_BASE_HZ = 2; // baseline adapts slower than vibrato
+      const VIB_GATE_LO = 0.004; // ≈ sensor-jitter floor
+      const VIB_GATE_HI = 0.01; // deliberate vibrato amplitude
+      let vibBase = null;
+      let vibEnv = 0;
+
+      // Player-anchored fields, captured via the Calibrate button:
+      //   pitchCalib — palm frame-Y at the right hand's highest / lowest note
+      //   volCalib   — palm frame-Y at the left hand's full-volume / rest
+      // Defaults cover the middle of the frame.
+      let pitchCalib = { top: 0.15, bottom: 0.85 };
+      let volCalib = { top: 0.2, bottom: 0.9 };
+      let calibSession = null; // active calibration flow, or null
+
+      (function loadCalibration() {
+        try {
+          const c = JSON.parse(localStorage.getItem('aetherPitchCalib'));
+          if (!c) return;
+          if (c.bottom - c.top >= 0.15)
+            pitchCalib = { top: c.top, bottom: c.bottom };
+          if (c.volBottom - c.volTop >= 0.15)
+            volCalib = { top: c.volTop, bottom: c.volBottom };
+        } catch (e) {}
+      })();
+
+      function lmDist(a, b) {
+        return Math.hypot(a.x - b.x, a.y - b.y, (a.z || 0) - (b.z || 0));
+      }
+
+      function clamp01(v) {
+        return Math.max(0, Math.min(1, v));
+      }
+
+      // Average height of the palm (wrist + knuckles), 0 = top of frame
+      function palmY(lm) {
+        return (lm[0].y + lm[5].y + lm[9].y + lm[13].y + lm[17].y) / 5;
+      }
+
+      // Openness of a hand: mean fingertip-to-wrist distance, normalised by
+      // hand size (wrist → middle knuckle). Fist ≈ 1.1, open hand ≈ 2.0+.
+      function handOpenness(lm) {
+        const scale = lmDist(lm[0], lm[9]) || 1e-6;
+        const tips = [8, 12, 16, 20];
+        const avg =
+          tips.reduce((s, i) => s + lmDist(lm[0], lm[i]), 0) / tips.length;
+        return avg / scale;
+      }
+
+      // 'Right' / 'Left' for hand i. Falls back to frame position when the
+      // classifier is unsure: in the raw camera image the player's right
+      // hand appears on the left side (the preview is mirrored for display).
+      function handLabelAt(results, i) {
+        const h =
+          results.handedness && results.handedness[i]
+            ? results.handedness[i][0]
+            : null;
+        if (h && h.categoryName && h.score >= 0.6) return h.categoryName;
+        const lm = results.landmarks[i];
+        if (!lm) return null;
+        const avgX = lm.reduce((s, p) => s + p.x, 0) / lm.length;
+        return avgX < 0.5 ? 'Right' : 'Left';
+      }
+
+      // Fine pitch trim ("aerial fingering"): thumb-tip ↔ index-tip
+      // distance, normalised by hand size, mapped to ±1 semitone.
+      // Pinched = flat, spread = sharp — mirrors how real thereminists
+      // make small corrections with the fingers while the arm holds position.
+      function pinchTrimSemis(lm) {
+        const scale = lmDist(lm[0], lm[9]) || 1e-6;
+        const d = lmDist(lm[4], lm[8]) / scale;
+        return clamp01((d - 0.45) / 0.95) * 2 - 1;
+      }
+
+      // ── Calibration: anchor both fields to the player's body ──────────
+      const CALIB_STEPS = [
+        { hand: 'Right', prompt: 'Hold your RIGHT hand at your HIGHEST note' },
+        { hand: 'Right', prompt: 'Now your LOWEST note (right hand)' },
+        { hand: 'Left', prompt: 'Raise your LEFT hand — FULL volume' },
+        { hand: 'Left', prompt: 'Rest your left hand low — SILENCE' },
+      ];
+
+      function toggleCalibration() {
+        if (calibSession) {
+          calibSession = null;
+          el('camCalibPrompt').textContent = '';
+          el('btnCamCalibrate').classList.remove('active');
+        } else if (camDetecting) {
+          calibSession = {
+            step: 0,
+            phase: 'countdown',
+            phaseEnd: performance.now() + 3000,
+            samples: [],
+            results: [],
+          };
+          el('btnCamCalibrate').classList.add('active');
+        }
+      }
+
+      function updateCalibration(rightHand, leftHand, now) {
+        if (!calibSession) return;
+        const prompt = el('camCalibPrompt');
+        const s = calibSession;
+        const step = CALIB_STEPS[s.step];
+        const hand = step.hand === 'Right' ? rightHand : leftHand;
+
+        if (s.phase === 'countdown') {
+          const remain = Math.max(0, Math.ceil((s.phaseEnd - now) / 1000));
+          prompt.textContent = step.prompt + ' — ' + remain;
+          if (now >= s.phaseEnd) {
+            s.phase = 'sample';
+            s.phaseEnd = now + 800;
+            s.samples = [];
+          }
+          return;
+        }
+
+        // Sampling window
+        if (hand) s.samples.push(palmY(hand));
+        prompt.textContent = 'Hold still…';
+        if (now < s.phaseEnd) return;
+
+        if (s.samples.length < 5) {
+          // Hand wasn't visible — restart this step
+          s.phase = 'countdown';
+          s.phaseEnd = now + 3000;
+          prompt.textContent = step.hand + ' hand not detected — try again';
+          return;
+        }
+        s.results.push(
+          s.samples.reduce((a, b) => a + b, 0) / s.samples.length,
+        );
+
+        if (s.step < CALIB_STEPS.length - 1) {
+          s.step++;
+          s.phase = 'countdown';
+          s.phaseEnd = now + 3000;
+          return;
+        }
+
+        // All captures done — validate and save each field independently
+        const [pTop, pBottom, vTop, vBottom] = s.results;
+        const warnings = [];
+        if (pBottom - pTop >= 0.15) {
+          pitchCalib = { top: pTop, bottom: pBottom };
+        } else {
+          warnings.push('pitch range too small/inverted — kept previous');
+        }
+        if (vBottom - vTop >= 0.15) {
+          volCalib = { top: vTop, bottom: vBottom };
+        } else {
+          warnings.push('volume range too small/inverted — kept previous');
+        }
+        try {
+          localStorage.setItem(
+            'aetherPitchCalib',
+            JSON.stringify({
+              top: pitchCalib.top,
+              bottom: pitchCalib.bottom,
+              volTop: volCalib.top,
+              volBottom: volCalib.bottom,
+            }),
+          );
+        } catch (e) {}
+        prompt.textContent = warnings.length
+          ? warnings.join('; ')
+          : 'Calibration saved ✓';
+        calibSession = null;
+        el('btnCamCalibrate').classList.remove('active');
+        setTimeout(() => {
+          if (!calibSession) el('camCalibPrompt').textContent = '';
+        }, 2200);
+      }
+
+      async function startGestureMode() {
+        const btn = el('btnCamStart');
+        btn.disabled = true;
+        el('camError').textContent = '';
+        try {
+          initAudio();
+          // Natural vibrato only: in gesture mode the pitch hand's own
+          // oscillation modulates pitch, so the synthetic LFO is silenced.
+          // It is restored from the slider value in stopGestureMode().
+          vibGain.gain.value = 0;
+          if (!handLandmarker) {
+            btn.textContent = 'Loading hand-tracking model…';
+            const vision = await import(VISION_CDN);
+            const fileset = await vision.FilesetResolver.forVisionTasks(
+              VISION_CDN + '/wasm',
+            );
+            handLandmarker = await vision.HandLandmarker.createFromOptions(
+              fileset,
+              {
+                baseOptions: {
+                  modelAssetPath: HAND_MODEL_URL,
+                  delegate: 'GPU',
+                },
+                runningMode: 'VIDEO',
+                numHands: 2,
+              },
+            );
+          }
+          btn.textContent = 'Starting camera…';
+          camStream = await navigator.mediaDevices.getUserMedia({
+            video: { width: { ideal: 1280 }, height: { ideal: 720 } },
+            audio: false,
+          });
+          const video = el('camVideo');
+          video.srcObject = camStream;
+          await video.play();
+          el('camEnable').style.display = 'none';
+          el('btnCamCalibrate').style.display = 'block';
+          camDetecting = true;
+          camLastVideoTime = -1;
+          lastRightHandSeen = 0;
+          camDetectLoop();
+        } catch (err) {
+          console.error('Gesture mode failed:', err);
+          el('camError').textContent =
+            err && err.name === 'NotAllowedError'
+              ? 'Camera permission denied. Allow camera access and try again.'
+              : 'Could not start gesture mode: ' +
+                (err && err.message ? err.message : err) +
+                ' (A camera and an internet connection for the tracking model are required.)';
+          btn.disabled = false;
+          btn.textContent = 'Enable Camera';
+        }
+      }
+
+      function stopGestureMode() {
+        camDetecting = false;
+        if (camRAF) cancelAnimationFrame(camRAF);
+        camRAF = null;
+        if (camStream) {
+          camStream.getTracks().forEach((t) => t.stop());
+          camStream = null;
+        }
+        el('camVideo').srcObject = null;
+        pitchFilter.reset();
+        pitchFilter.minCutoff = PITCH_MIN_CUTOFF;
+        volFilter.reset();
+        pitchVal = null;
+        volVal = null;
+        vibBase = null;
+        vibEnv = 0;
+        lastProcTime = 0;
+        leftMuted = false;
+        lastRightHandSeen = 0;
+        calibSession = null;
+        gesturePlaying = false;
+        // Restore the synthetic vibrato for the other modes
+        if (vibGain) vibGain.gain.value = parseFloat(el('vibDepth').value) / 10;
+        if (isPlaying) noteOff();
+        el('camFreqDisplay').classList.remove('visible');
+        el('camStatus').textContent = '';
+        el('camVolFill').style.height = '0%';
+        el('camCalibPrompt').textContent = '';
+        el('btnCamCalibrate').style.display = 'none';
+        el('btnCamCalibrate').classList.remove('active');
+        el('camEnable').style.display = '';
+        const btn = el('btnCamStart');
+        btn.disabled = false;
+        btn.textContent = 'Enable Camera';
+        const overlay = el('camOverlay');
+        overlay.getContext('2d').clearRect(0, 0, overlay.width, overlay.height);
+      }
+
+      function camDetectLoop() {
+        if (!camDetecting) return;
+        const video = el('camVideo');
+        if (
+          handLandmarker &&
+          video.readyState >= 2 &&
+          video.currentTime !== camLastVideoTime
+        ) {
+          camLastVideoTime = video.currentTime;
+          let results;
+          try {
+            results = handLandmarker.detectForVideo(video, performance.now());
+          } catch (e) {
+            results = null;
+          }
+          if (results) {
+            processHands(results);
+            drawHands(results);
+          }
+        }
+        camRAF = requestAnimationFrame(camDetectLoop);
+      }
+
+      function processHands(results) {
+        const now = performance.now();
+        const dt = Math.min(
+          0.1,
+          lastProcTime ? (now - lastProcTime) / 1000 : 1 / 30,
+        );
+        lastProcTime = now;
+        const minF = parseFloat(el('freqMin').value);
+        const maxF = parseFloat(el('freqMax').value);
+
+        let rightHand = null,
+          leftHand = null;
+        if (results.landmarks) {
+          results.landmarks.forEach((lm, i) => {
+            const label = handLabelAt(results, i);
+            if (label === 'Right') rightHand = lm;
+            else if (label === 'Left') leftHand = lm;
+          });
+        }
+
+        updateCalibration(rightHand, leftHand, now);
+
+        // Pitch: right-hand height within the calibrated field (raised =
+        // higher), plus a ±1 semitone finger trim, plus vibrato-adaptive
+        // filtering that lets the player's own hand vibrato through.
+        if (rightHand) {
+          lastRightHandSeen = now;
+          const semis = 12 * Math.log2(maxF / minF);
+          const raw = clamp01(
+            (pitchCalib.bottom - palmY(rightHand)) /
+              (pitchCalib.bottom - pitchCalib.top) +
+              pinchTrimSemis(rightHand) / semis,
+          );
+
+          // Vibrato gate: envelope of the fast pitch component
+          if (vibBase === null) vibBase = raw;
+          const aVib = 1 - Math.exp(-2 * Math.PI * VIB_BASE_HZ * dt);
+          vibBase += (raw - vibBase) * aVib;
+          vibEnv += (Math.abs(raw - vibBase) - vibEnv) * aVib;
+          const gate = clamp01(
+            (vibEnv - VIB_GATE_LO) / (VIB_GATE_HI - VIB_GATE_LO),
+          );
+          pitchFilter.minCutoff = PITCH_MIN_CUTOFF + gate * 14;
+
+          pitchVal = pitchFilter.filter(raw, now / 1000);
+        }
+
+        // Volume: left-hand height above the calibrated "plate", like the
+        // volume loop of a real theremin (raised = loud, at rest = silent).
+        // A closed fist forces silence for articulation (with hysteresis
+        // so the mute state can't flutter).
+        if (leftHand) {
+          const open = handOpenness(leftHand);
+          if (open < 1.2) leftMuted = true;
+          else if (open > 1.35) leftMuted = false;
+          const raw = leftMuted
+            ? 0
+            : clamp01(
+                (volCalib.bottom - palmY(leftHand)) /
+                  (volCalib.bottom - volCalib.top),
+              );
+          volVal = volFilter.filter(raw, now / 1000);
+        }
+
+        el('camVolFill').style.height =
+          ((volVal || 0) * 100).toFixed(1) + '%';
+
+        // Grace period: briefly hold the note through tracking dropouts
+        // instead of cutting to silence
+        const rightActive =
+          rightHand ||
+          (pitchVal !== null && now - lastRightHandSeen < GRACE_MS);
+
+        if (rightActive && pitchVal !== null) {
+          const freq = minF * Math.pow(maxF / minF, pitchVal);
+          gestureNoteUpdate(freq, volVal === null ? 0.7 : volVal);
+          el('camStatus').textContent = leftHand
+            ? leftMuted
+              ? 'Muted — fist closed'
+              : ''
+            : 'Left hand not detected — volume held';
+        } else {
+          if (gesturePlaying || isPlaying) noteOff();
+          gesturePlaying = false;
+          el('camFreqDisplay').classList.remove('visible');
+          el('camStatus').textContent = 'Raise your right hand to play';
+        }
+      }
+
+      // Continuous variant of noteOn: smooth-exponential tracking of pitch
+      // and volume, called once per detected video frame.
+      function gestureNoteUpdate(freq, vol) {
+        initAudio();
+        freq = quantizeFreq(freq);
+        const now = audioCtx.currentTime;
+        const porta = Math.max(
+          0.015,
+          parseFloat(el('portamento').value) / 1000,
+        );
+        osc.frequency.setTargetAtTime(freq, now, porta / 3);
+        osc._gainNode.gain.setTargetAtTime(vol * 0.5, now, 0.05);
+        isPlaying = true;
+        gesturePlaying = true;
+        const fd = el('camFreqDisplay');
+        fd.textContent = `${freq.toFixed(1)} Hz — ${noteNameFromFreq(freq)}`;
+        fd.classList.add('visible');
+      }
+
+      function drawHands(results) {
+        const video = el('camVideo');
+        const canvas = el('camOverlay');
+        const rect = video.getBoundingClientRect();
+        if (
+          canvas.width !== Math.round(rect.width) ||
+          canvas.height !== Math.round(rect.height)
+        ) {
+          canvas.width = Math.round(rect.width);
+          canvas.height = Math.round(rect.height);
+        }
+        const ctx = canvas.getContext('2d');
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        const vw = video.videoWidth,
+          vh = video.videoHeight;
+        if (!vw || !vh || !results.landmarks) return;
+
+        // Map video coords → displayed (object-fit: cover, mirrored) coords
+        const scale = Math.max(rect.width / vw, rect.height / vh);
+        const dx = (rect.width - vw * scale) / 2;
+        const dy = (rect.height - vh * scale) / 2;
+        const px = (nx) => rect.width - (nx * vw * scale + dx); // mirrored
+        const py = (ny) => ny * vh * scale + dy;
+
+        results.landmarks.forEach((lm, i) => {
+          const label = handLabelAt(results, i);
+          const color = label === 'Right' ? '#62b48e' : '#c8a84e';
+
+          ctx.strokeStyle = color;
+          ctx.lineWidth = 2;
+          ctx.globalAlpha = 0.8;
+          ctx.beginPath();
+          for (const [a, b] of HAND_CONNECTIONS) {
+            ctx.moveTo(px(lm[a].x), py(lm[a].y));
+            ctx.lineTo(px(lm[b].x), py(lm[b].y));
+          }
+          ctx.stroke();
+
+          ctx.fillStyle = color;
+          ctx.globalAlpha = 1;
+          for (const p of lm) {
+            ctx.beginPath();
+            ctx.arc(px(p.x), py(p.y), 3, 0, Math.PI * 2);
+            ctx.fill();
+          }
+        });
+        ctx.globalAlpha = 1;
+      }
+
       // ─── Settings Bindings ──────────────────────────────────────────
       function bindSettings() {
         bindSlider(
@@ -2370,7 +3204,7 @@
           'vibDepth',
           'vibDepthVal',
           (v) => {
-            if (vibGain) vibGain.gain.value = v;
+            if (vibGain && currentMode !== 'camera') vibGain.gain.value = v;
             return v;
           },
           10,
@@ -2473,7 +3307,7 @@
         if (audioCtx) {
           osc.type = p.waveform;
           vibLFO.frequency.value = p.vibRate;
-          vibGain.gain.value = p.vibDepth;
+          if (currentMode !== 'camera') vibGain.gain.value = p.vibDepth;
           reverbGain.gain.value = p.reverb / 100;
           dryGain.gain.value = 1 - p.reverb / 200;
           delayNode.delayTime.value = p.delayTime / 1000;
@@ -2500,7 +3334,12 @@
           return (data[pos++] << 8) | data[pos++];
         }
         function readUint32() {
-          return (data[pos++] << 24) | (data[pos++] << 16) | (data[pos++] << 8) | data[pos++];
+          return (
+            (data[pos++] << 24) |
+            (data[pos++] << 16) |
+            (data[pos++] << 8) |
+            data[pos++]
+          );
         }
         function readVarLen() {
           let val = 0;
@@ -2564,11 +3403,13 @@
             const cmd = runningStatus & 0xf0;
             const ch = runningStatus & 0x0f;
 
-            if (cmd === 0x80) { // Note Off
+            if (cmd === 0x80) {
+              // Note Off
               const note = data[pos++];
               const vel = data[pos++];
               events.push({ delta, type: 'noteOff', ch, note, vel });
-            } else if (cmd === 0x90) { // Note On
+            } else if (cmd === 0x90) {
+              // Note On
               const note = data[pos++];
               const vel = data[pos++];
               if (vel === 0) {
@@ -2576,19 +3417,24 @@
               } else {
                 events.push({ delta, type: 'noteOn', ch, note, vel });
               }
-            } else if (cmd === 0xa0) { // Aftertouch
+            } else if (cmd === 0xa0) {
+              // Aftertouch
               pos += 2;
               events.push({ delta, type: 'other' });
-            } else if (cmd === 0xb0) { // Control Change
+            } else if (cmd === 0xb0) {
+              // Control Change
               pos += 2;
               events.push({ delta, type: 'other' });
-            } else if (cmd === 0xc0) { // Program Change
+            } else if (cmd === 0xc0) {
+              // Program Change
               pos += 1;
               events.push({ delta, type: 'other' });
-            } else if (cmd === 0xd0) { // Channel Pressure
+            } else if (cmd === 0xd0) {
+              // Channel Pressure
               pos += 1;
               events.push({ delta, type: 'other' });
-            } else if (cmd === 0xe0) { // Pitch Bend
+            } else if (cmd === 0xe0) {
+              // Pitch Bend
               pos += 2;
               events.push({ delta, type: 'other' });
             } else {
@@ -2624,7 +3470,9 @@
         }
 
         // Sort by tick time, meta events first (for tempo)
-        allEvents.sort((a, b) => a.tickTime - b.tickTime || (a.type === 'meta' ? -1 : 1));
+        allEvents.sort(
+          (a, b) => a.tickTime - b.tickTime || (a.type === 'meta' ? -1 : 1),
+        );
 
         // Convert ticks to seconds
         const timedEvents = [];
@@ -2637,7 +3485,11 @@
           currentTime += (deltaTicks / ticksPerBeat) * (currentTempo / 1000000);
           currentTick = ev.tickTime;
 
-          if (ev.type === 'meta' && ev.metaType === 0x51 && ev.data.length >= 3) {
+          if (
+            ev.type === 'meta' &&
+            ev.metaType === 0x51 &&
+            ev.data.length >= 3
+          ) {
             currentTempo = (ev.data[0] << 16) | (ev.data[1] << 8) | ev.data[2];
           }
 
@@ -2661,7 +3513,7 @@
           try {
             const midi = parseMidi(e.target.result);
             const events = midiToNoteEvents(midi);
-            const noteOnEvents = events.filter(ev => ev.type === 'noteOn');
+            const noteOnEvents = events.filter((ev) => ev.type === 'noteOn');
             if (noteOnEvents.length === 0) {
               alert('No playable notes found in this MIDI file.');
               return;
@@ -2670,7 +3522,13 @@
             const totalDuration = lastEvent ? lastEvent.time : 0;
             const noteCount = noteOnEvents.length;
 
-            midiData = { fileName: file.name, events, totalDuration, noteCount, trackCount: midi.numTracks };
+            midiData = {
+              fileName: file.name,
+              events,
+              totalDuration,
+              noteCount,
+              trackCount: midi.numTracks,
+            };
 
             el('midiFileName').textContent = file.name;
             el('midiFileMeta').textContent =
@@ -2705,7 +3563,13 @@
         const timeouts = [];
         const activeNotes = new Map(); // note -> count of active voices
 
-        midiPlaybackState = { playing: true, startTime, timeouts, totalDuration, animFrame: null };
+        midiPlaybackState = {
+          playing: true,
+          startTime,
+          timeouts,
+          totalDuration,
+          animFrame: null,
+        };
 
         // Update UI
         el('btnMidiPlay').innerHTML =
@@ -2747,10 +3611,13 @@
         }
 
         // End-of-playback timeout
-        const endTid = setTimeout(() => {
-          noteOff();
-          finishMidiPlayback();
-        }, (totalDuration + 0.5) * 1000);
+        const endTid = setTimeout(
+          () => {
+            noteOff();
+            finishMidiPlayback();
+          },
+          (totalDuration + 0.5) * 1000,
+        );
         timeouts.push(endTid);
 
         // Progress bar animation
@@ -2768,7 +3635,8 @@
         if (!midiPlaybackState) return;
         midiPlaybackState.playing = false;
         for (const tid of midiPlaybackState.timeouts) clearTimeout(tid);
-        if (midiPlaybackState.animFrame) cancelAnimationFrame(midiPlaybackState.animFrame);
+        if (midiPlaybackState.animFrame)
+          cancelAnimationFrame(midiPlaybackState.animFrame);
         midiPlaybackState = null;
 
         noteOff();
@@ -2781,7 +3649,8 @@
 
       function finishMidiPlayback() {
         if (!midiPlaybackState) return;
-        if (midiPlaybackState.animFrame) cancelAnimationFrame(midiPlaybackState.animFrame);
+        if (midiPlaybackState.animFrame)
+          cancelAnimationFrame(midiPlaybackState.animFrame);
         midiPlaybackState = null;
 
         el('midiProgressBar').style.width = '100%';
@@ -2831,15 +3700,20 @@
       }
 
       function switchMode(mode) {
+        const prevMode = currentMode;
         currentMode = mode;
         el('btnMouseMode').classList.toggle('active', mode === 'mouse');
         el('btnKeyboardMode').classList.toggle('active', mode === 'keyboard');
+        el('btnCamMode').classList.toggle('active', mode === 'camera');
         el('mouseSurface').classList.toggle('active', mode === 'mouse');
         el('mouseSurface').style.display = mode === 'mouse' ? 'flex' : 'none';
         el('keyboardSurface').classList.toggle('active', mode === 'keyboard');
         el('keyboardSurface').style.display =
           mode === 'keyboard' ? 'flex' : 'none';
+        el('camSurface').classList.toggle('active', mode === 'camera');
+        el('camSurface').style.display = mode === 'camera' ? 'flex' : 'none';
         noteOff();
+        if (prevMode === 'camera' && mode !== 'camera') stopGestureMode();
       }
 
       function toggleRecord() {
@@ -2878,6 +3752,9 @@
         el('btnKeyboardMode').addEventListener('click', () =>
           switchMode('keyboard'),
         );
+        el('btnCamMode').addEventListener('click', () => switchMode('camera'));
+        el('btnCamStart').addEventListener('click', startGestureMode);
+        el('btnCamCalibrate').addEventListener('click', toggleCalibration);
         el('btnRecord').addEventListener('click', toggleRecord);
         el('btnStop').addEventListener('click', stopAll);
         el('btnSettings').addEventListener('click', () =>

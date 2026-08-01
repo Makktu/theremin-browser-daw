@@ -28,6 +28,63 @@ A custom cursor with a glow ring follows your movement, and an optional particle
 
 This mode is designed to mirror the gestural, spatial nature of a real theremin — small hand movements translate directly into continuous pitch and volume changes.
 
+### Gesture Mode (Webcam)
+
+The closest experience to playing a real theremin: you play it by moving your hands in the air, with the same two-hand technique as the physical instrument. Click the **Gesture** mode button, then **Enable Camera**. Hand tracking runs entirely in the browser (MediaPipe HandLandmarker, GPU-accelerated) — no video ever leaves your machine.
+
+#### How to play it
+
+| Gesture | Effect |
+|---|---|
+| **Right hand up / down** | Pitch — higher hand = higher note, continuous and step-free |
+| **Right hand wobble** | Natural vibrato — your own hand oscillation modulates the pitch |
+| **Right hand thumb–index pinch** | Fine tuning, ±1 semitone (pinched = flat, spread = sharp) |
+| **Left hand height** | Volume — raised = loud, resting low = silent |
+| **Left fist closed** | Mute — for articulating phrases and separating notes |
+| **Right hand leaves the frame** | The theremin falls silent |
+
+A mirrored live preview shows a skeleton overlay of both tracked hands (green = pitch hand, amber = volume hand), a volume meter, and a frequency/note readout. Recording, presets, effects, and scale quantization all work exactly as in the other modes.
+
+#### Calibration
+
+Like a real theremin, the playing fields should match *your* body and reach, not the camera frame. Once the camera is running, click **Calibrate** (top-right) and follow the four prompts:
+
+1. Hold your **right hand** at your **highest** comfortable note.
+2. Hold your **right hand** at your **lowest** note.
+3. Raise your **left hand** — full volume.
+4. Rest your **left hand** low — silence (your virtual "volume plate").
+
+The full pitch and volume ranges are then mapped between those positions, so every note is always where your muscle memory expects it — the single most important factor in real theremin technique. Calibration is saved locally and reused next session; recalibrate whenever you move the camera or change where you sit.
+
+#### How it mimics a real theremin
+
+A real theremin senses hand position capacitively: the pitch antenna produces a continuous tone that rises as your hand approaches, and the volume loop attenuates the sound as your other hand nears it. There are no buttons, keys, or contacts — pitch is a smooth analog continuum, vibrato comes from oscillating the pitch hand, phrasing and articulation are shaped entirely by the volume hand, and players make fine pitch corrections with finger and wrist movements ("aerial fingering") while the arm holds position. Gesture mode reproduces each of these behaviours:
+
+- **Continuous pitch field** — hand height maps logarithmically across the configured frequency range (equal distance per octave, like a well-tuned antenna), with no steps unless you deliberately enable scale quantization.
+- **Proximity volume** — volume follows left-hand height above a calibrated rest plane (the virtual equivalent of the volume loop), so swells, crescendos, and note separation are shaped with the volume hand exactly as on the real instrument. A closed fist is a practical addition: an instant mute for crisp articulation.
+- **Natural vibrato** — the synthetic LFO vibrato is disabled in gesture mode. Instead, a detector watches for deliberate ~5–7 Hz oscillation of your pitch hand and opens the tracking filter to let it through to the oscillator — your vibrato, at your speed and depth, like the real thing.
+- **Aerial fingering** — the distance between your right thumb and index fingertips applies a ±1 semitone trim, allowing small intonation corrections without moving your arm.
+- **No glitch-silence** — a ~200 ms grace period holds the note through brief tracking dropouts (e.g. when your hands cross), because a real instrument never drops out.
+
+#### How it works, technically
+
+- **Tracking** — MediaPipe `HandLandmarker` (21 landmarks per hand, 2 hands, GPU delegate) runs on each video frame. Handedness labels identify the pitch vs. volume hand, with a frame-position fallback when the classifier is unsure.
+- **Signal conditioning** — pitch and volume pass through One Euro filters: adaptive smoothers that reject sensor jitter when your hand is still but introduce almost no lag during fast movement. The vibrato gate measures the envelope of the fast pitch component and raises the filter's cutoff only while deliberate oscillation is present, so jitter stays filtered at rest while real vibrato passes.
+- **Sound** — the conditioned signals drive the same oscillator, effects chain, recorder, and quantization settings as the other modes, using smooth exponential parameter ramps (the portamento setting controls glide feel).
+
+#### Realistic limitations
+
+- **Latency** — a real theremin responds essentially instantly. Camera-based control adds capture + inference delay (typically 50–100 ms depending on your camera and machine), comparable to a large-monitor or wireless setup. Fast passages feel less crisp than the real instrument.
+- **Frame rate** — tracking runs at your camera's frame rate (usually 30 fps). Pitch is interpolated smoothly between frames, but extremely fast hand motions are inherently sampled, not continuous.
+- **No true depth** — a single webcam sees a 2D projection. Moving your hand toward/away from the camera only weakly affects the reading (via foreshortening), so the pitch field is vertical rather than the real instrument's hand-to-antenna distance. Leaning your body shifts the field — recalibrate if you move.
+- **Lighting and camera quality matter** — dim rooms, backlighting, motion blur, and noisy low-end webcams degrade tracking. Even, frontal lighting and a 720p+ camera give the best results.
+- **Occlusion** — when one hand blocks the other from the camera's view, or both overlap closely, tracking can swap or drop hands momentarily. The grace period and handedness fallback smooth this over, but keep your hands separated in the frame for best results.
+- **Vibrato is detected, not magic** — very small or very slow vibrato may be partially smoothed out; very large wobbles may read as pitch movement. The sweet spot is a relaxed ~5–7 Hz oscillation.
+- **Intonation is still on you** — there are no frets in the air. Use the note readout (and optionally scale quantization in Settings) while building muscle memory.
+- **First use needs internet** — the hand-tracking model (~10 MB) is fetched from a CDN the first time you enable gesture mode. Everything else in the app is fully self-contained.
+
+If your browser refuses camera access from a `file://` URL, serve the folder locally instead (e.g. `python3 -m http.server`) and open it via `localhost`.
+
 ### Keyboard Mode
 
 A two-octave piano-style keyboard rendered on screen. Notes can be triggered with mouse clicks on the keys or with the computer keyboard:
@@ -116,7 +173,7 @@ Six built-in presets configure the oscillator, effects, and portamento in one cl
 |---|---|
 | `R` | Toggle recording on/off |
 | `Space` | Stop recording and all playback |
-| `Tab` | Switch between mouse and keyboard mode |
+| `Tab` | Cycle mouse / keyboard / gesture mode |
 | `?` | Toggle help overlay |
 | `Z` | Octave down (keyboard mode) |
 | `X` | Octave up (keyboard mode) |
@@ -130,7 +187,8 @@ Six built-in presets configure the oscillator, effects, and portamento in one cl
 - **Single file** — All HTML, CSS, and JavaScript in one self-contained file. No build step, no server required.
 - **Web Audio API** — Oscillator synthesis, LFO vibrato, convolution reverb (procedurally generated impulse response), delay line with feedback, and chorus via modulated delay.
 - **Recording pipeline** — `MediaRecorder` captures the output as WebM/Opus, which is then decoded to a raw `AudioBuffer` and encoded to 16-bit PCM WAV entirely in the browser.
-- **No external dependencies** — The only external resource is the Google Fonts stylesheet for Inter and JetBrains Mono. The app works fully offline once the fonts are cached.
+- **Hand tracking** — Gesture mode uses MediaPipe's `HandLandmarker` (`@mediapipe/tasks-vision`), lazy-loaded from a CDN on first use. All inference runs locally in the browser via WebAssembly/GPU; camera frames are never uploaded anywhere.
+- **No other external dependencies** — The only other external resources are the Google Fonts stylesheet for Inter and JetBrains Mono and the hand-tracking assets above. Outside gesture mode, the app works fully offline once the fonts are cached.
 
 ---
 
