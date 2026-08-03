@@ -22,7 +22,9 @@ The default interface. A blank surface where cursor position controls the therem
 
 - **X-axis (horizontal)** — Pitch. Left is low, right is high.
 - **Y-axis (vertical)** — Volume. Top is quiet, bottom is loud.
-- **Click and hold** to produce sound. Release to stop.
+- **Click/touch and hold** to produce sound. Release to stop.
+
+On touchscreens this becomes a touch surface: press and drag your finger to play.
 
 A custom cursor with a glow ring follows your movement, and an optional particle trail visualises your path. A frequency/note readout appears at the top of the surface while playing.
 
@@ -98,7 +100,21 @@ A two-octave piano-style keyboard rendered on screen. Notes can be triggered wit
 - Octave buttons (2–6) in the top bar select the base octave directly.
 - A volume slider below the keyboard controls output level.
 
-The active note and its frequency are displayed above the keyboard.
+The active note and its frequency are displayed above the keyboard. On touchscreens the keys respond to touch.
+
+---
+
+## Mobile Support
+
+Æther detects phones and tablets (via the coarse-pointer media query and touch-point count) and adapts its layout automatically:
+
+- **Compact top bar** — mode buttons collapse to icons, the logo shrinks to its mark, and the timer hides on very narrow screens (the pulsing record button still signals recording).
+- **Touch playing** — the mouse surface and on-screen keyboard respond to touch via pointer events; slider thumbs are enlarged for fingers.
+- **Overlay panels** — Settings and Tracks slide over the playing surface instead of squeezing it.
+- **Gesture mode** works in both portrait and landscape: the calibration prompts, volume meter, frequency readout, and camera controls reflow for small screens, and the front (selfie) camera is preferred so it faces you while you play. In landscape the top bar and scope shrink to preserve vertical space.
+- **Safe areas & dynamic viewport** — the layout respects iPhone notches/home indicators (`viewport-fit=cover` + `env(safe-area-inset-*)`) and uses `100dvh` so the app fits as mobile browser chrome collapses.
+
+Everything else — recording, presets, effects, calibration — works identically to desktop.
 
 ---
 
